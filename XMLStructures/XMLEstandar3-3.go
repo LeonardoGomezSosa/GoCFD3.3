@@ -108,52 +108,57 @@ type CFDIConceptos struct {
 
 // CFDIConcepto Nodo requerido para registrar la información detallada de un bien o servicio amparado en el comprobante.
 type CFDIConcepto struct {
-	XMLName          xml.Name `xml:"cfdi:Concepto"`
-	ClaveProdServ    string   `xml:"ClaveProdServ,attr"`    // Atributo requerido para expresar la clave del producto o del servicio amparado por el presente concepto. Es requerido y deben utilizar las claves del catálogo de productos y servicios, cuando los conceptos que registren por sus actividades correspondan con dichos conceptos. c_ClaveProdServ Req.
-	NoIdentificacion string   `xml:"NoIdentificacion,attr"` // Atributo opcional para expresar el número de parte, identificador del producto o del servicio, la clave de producto o servicio, SKU o equivalente, propia de la operación del emisor, amparado por el presente concepto. Opcionalmente se puede utilizar claves del estándar GTIN. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}. Opc.
-	Cantidad         float64  `xml:"Cantidad,attr"`         // Atributo requerido para precisar la cantidad de bienes o servicios del tipo particular definido por el presente concepto. decimales (6) Req.
-	ClaveUnidad      string   `xml:"ClaveUnidad,attr"`      // Atributo requerido para precisar la clave de unidad de medida estandarizada aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. catCFDI:c_ClaveUnidad Req.
-	Unidad           string   `xml:"Unidad,attr"`           // Atributo opcional para precisar la unidad de medida propia de la operación del emisor, aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}.Opc.
-	Descripcion      string   `xml:"Descripcion,attr"`      // Atributo requerido para precisar la descripción del bien o servicio cubierto por el presente concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000} Opc.
-	ValorUnitario    float64  `xml:"ValorUnitario,attr"`    // Atributo requerido para precisar el valor o precio unitario del bien o servicio cubierto por el presente concepto. tdCFDI:t_Importe Req.
-	Importe          float64  `xml:"Importe,attr"`          //Atributo requerido para precisar el importe total de los bienes o servicios del presente concepto. Debe ser equivalente al resultado de multiplicar la cantidad por el valor unitario expresado en el concepto. No se permiten valores negativos. tdCFDI:t_Importe Req.
-	Descuento        float64  `xml:"Descuento,attr"`        // Atributo opcional para representar el importe de los descuentos aplicables al concepto. No se permiten valores negativos. tdCFDI:t_Importe Opc.
-	// Impuestos CFDIImpuestosInner
+	XMLName          xml.Name           `xml:"cfdi:Concepto"`
+	ClaveProdServ    string             `xml:"ClaveProdServ,attr"`    // Atributo requerido para expresar la clave del producto o del servicio amparado por el presente concepto. Es requerido y deben utilizar las claves del catálogo de productos y servicios, cuando los conceptos que registren por sus actividades correspondan con dichos conceptos. c_ClaveProdServ Req.
+	NoIdentificacion string             `xml:"NoIdentificacion,attr"` // Atributo opcional para expresar el número de parte, identificador del producto o del servicio, la clave de producto o servicio, SKU o equivalente, propia de la operación del emisor, amparado por el presente concepto. Opcionalmente se puede utilizar claves del estándar GTIN. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}. Opc.
+	Cantidad         float64            `xml:"Cantidad,attr"`         // Atributo requerido para precisar la cantidad de bienes o servicios del tipo particular definido por el presente concepto. decimales (6) Req.
+	ClaveUnidad      string             `xml:"ClaveUnidad,attr"`      // Atributo requerido para precisar la clave de unidad de medida estandarizada aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. catCFDI:c_ClaveUnidad Req.
+	Unidad           string             `xml:"Unidad,attr"`           // Atributo opcional para precisar la unidad de medida propia de la operación del emisor, aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}.Opc.
+	Descripcion      string             `xml:"Descripcion,attr"`      // Atributo requerido para precisar la descripción del bien o servicio cubierto por el presente concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000} Opc.
+	ValorUnitario    float64            `xml:"ValorUnitario,attr"`    // Atributo requerido para precisar el valor o precio unitario del bien o servicio cubierto por el presente concepto. tdCFDI:t_Importe Req.
+	Importe          float64            `xml:"Importe,attr"`          //Atributo requerido para precisar el importe total de los bienes o servicios del presente concepto. Debe ser equivalente al resultado de multiplicar la cantidad por el valor unitario expresado en el concepto. No se permiten valores negativos. tdCFDI:t_Importe Req.
+	Descuento        float64            `xml:"Descuento,attr"`        // Atributo opcional para representar el importe de los descuentos aplicables al concepto. No se permiten valores negativos. tdCFDI:t_Importe Opc.
+	Impuestos        CFDIImpuestosInner `xml:"cfdi:Impuestos"`
 }
 
-// // CFDIImpuestosInner Nodo opcional para capturar los impuestos aplicables al presente concepto. Cuando un concepto no registra un impuesto, implica que no es objeto del mismo.
-// type CFDIImpuestosInner struct {
-// 	Traslados CFDIImpuestosTrasladosInner //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
-// 	Traslado  CFDIImpuestosTrasladosInner //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
-// }
+// CFDIImpuestosInner Nodo opcional para capturar los impuestos aplicables al presente concepto. Cuando un concepto no registra un impuesto, implica que no es objeto del mismo.
+type CFDIImpuestosInner struct {
+	XMLName     xml.Name                      `xml:"cfdi:Impuestos"`
+	Traslados   CFDIImpuestosTrasladosInner   `xml:"cfdi:Traslados"`   //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+	Retenciones CFDIImpuestosRetencionesInner `xml:"cfdi:Retenciones"` //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+}
 
-// // CFDIImpuestosTrasladosInner Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
-// type CFDIImpuestosTrasladosInner struct {
-// 	Traslados []CFDIImpuestosTrasladoInner
-// }
+// CFDIImpuestosTrasladosInner Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+type CFDIImpuestosTrasladosInner struct {
+	XMLName   xml.Name                   `xml:"cfdi:Traslados"`
+	Traslados CFDIImpuestosTrasladoInner `xml:"cfdi:Traslado"`
+}
 
-// // CFDIImpuestosTrasladoInner Nodo requerido para asentar la información detallada de un traslado de impuestos aplicable al presente concepto.
-// type CFDIImpuestosTrasladoInner struct {
-// 	Base       float64 // Atributo requerido para señalar la base para el cálculo del impuesto, la determinación de la base se realiza de acuerdo con las disposiciones fiscales vigentes. No se permiten valores negativos.
-// 	Impuesto   string  // Atributo requerido para señalar la clave del tipo de impuesto trasladado aplicable al concepto.
-// 	TipoFactor string  // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
-// 	TasaOCuota float64 // Atributo condicional para señalar el valor de la tasa o cuota del impuesto que se traslada para el presente concepto. Es requerido cuando el atributo TipoFactor tenga un valor que corresponda a Tasa o Cuota.
-// 	Importe    float64 // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
-// }
+// CFDIImpuestosTrasladoInner Nodo requerido para asentar la información detallada de un traslado de impuestos aplicable al presente concepto.
+type CFDIImpuestosTrasladoInner struct {
+	XMLName    xml.Name `xml:"cfdi:Traslado"`
+	Base       float64  `xml:"Base,attr"`       // Atributo requerido para señalar la base para el cálculo del impuesto, la determinación de la base se realiza de acuerdo con las disposiciones fiscales vigentes. No se permiten valores negativos.
+	Impuesto   string   `xml:"Impuesto,attr"`   // Atributo requerido para señalar la clave del tipo de impuesto trasladado aplicable al concepto.
+	TipoFactor string   `xml:"TipoFactor,attr"` // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
+	TasaOCuota float64  `xml:"TasaOCuota,attr"` // Atributo condicional para señalar el valor de la tasa o cuota del impuesto que se traslada para el presente concepto. Es requerido cuando el atributo TipoFactor tenga un valor que corresponda a Tasa o Cuota.
+	Importe    float64  `xml:"Importe,attr"`    // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
+}
 
-// // CFDIImpuestosRetencionesInner Nodo opcional para asentar los impuestos retenidos aplicables al presente concepto.
-// type CFDIImpuestosRetencionesInner struct {
-// 	Retenciones []CFDIImpuestosRetencionInner //
-// }
+// CFDIImpuestosRetencionesInner Nodo opcional para asentar los impuestos retenidos aplicables al presente concepto.
+type CFDIImpuestosRetencionesInner struct {
+	XMLName     xml.Name                    `xml:"cfdi:Retenciones"`
+	Retenciones CFDIImpuestosRetencionInner `xml:"cfdi:Retencion"`
+}
 
-// // CFDIImpuestosRetencionInner Nodo requerido para asentar la información detallada de una retención de impuestos aplicable al presente concepto.
-// type CFDIImpuestosRetencionInner struct {
-// 	Base       float64 // Atributo requerido para señalar la base para el cálculo del impuesto, la determinación de la base se realiza de acuerdo con las disposiciones fiscales vigentes. No se permiten valores negativos.
-// 	Impuesto   string  // Atributo requerido para señalar la clave del tipo de impuesto trasladado aplicable al concepto.
-// 	TipoFactor string  // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
-// 	TasaOCuota float64 // Atributo condicional para señalar el valor de la tasa o cuota del impuesto que se traslada para el presente concepto. Es requerido cuando el atributo TipoFactor tenga un valor que corresponda a Tasa o Cuota.
-// 	Importe    float64 // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
-// }
+// CFDIImpuestosRetencionInner Nodo requerido para asentar la información detallada de una retención de impuestos aplicable al presente concepto.
+type CFDIImpuestosRetencionInner struct {
+	XMLName    xml.Name `xml:"cfdi:Retencion"`
+	Base       float64  `xml:"Base,attr"`       // Atributo requerido para señalar la base para el cálculo del impuesto, la determinación de la base se realiza de acuerdo con las disposiciones fiscales vigentes. No se permiten valores negativos.
+	Impuesto   string   `xml:"Impuesto,attr"`   // Atributo requerido para señalar la clave del tipo de impuesto trasladado aplicable al concepto.
+	TipoFactor string   `xml:"TipoFactor,attr"` // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
+	TasaOCuota float64  `xml:"TasaOCuota,attr"` // Atributo condicional para señalar el valor de la tasa o cuota del impuesto que se traslada para el presente concepto. Es requerido cuando el atributo TipoFactor tenga un valor que corresponda a Tasa o Cuota.
+	Importe    float64  `xml:"Importe,attr"`    // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
+}
 
 // // CFDIInformacionAduanera Nodo opcional para introducir la información aduanera aplicable cuando se trate de ventas de primera mano de mercancías importadas o se trate de operaciones de comercio exterior con bienes o servicios.
 // type CFDIInformacionAduanera struct {
