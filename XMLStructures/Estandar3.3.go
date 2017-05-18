@@ -2,6 +2,14 @@ package xmlstructures
 
 import "time"
 
+/****************************************************************************************************************************************
+*
+*
+* Estructura general de un CFD
+*
+*
+****************************************************************************************************************************************/
+
 // Comprobante Estándar de Comprobante Fiscal Digital por Internet
 type ComprobanteMgo struct {
 	Version           string    // Atributo requerido con valor prefijado a 3.3 que indica la versión del estándar bajo el que se encuentra expresado el comprobante. Default: "3.3" Req.
@@ -27,8 +35,14 @@ type ComprobanteMgo struct {
 	CFDIReceptorMgo
 	CFDIConceptosMgo
 	CFDIImpuestosMgo
-	CFDIComplementoMgo
 }
+
+/*****************************************************************************************************************************************
+*
+*	Seccion referente a los CFD relacionados del CFD
+*
+*
+*****************************************************************************************************************************************/
 
 // CFDIRelacionadosMgo Nodo opcional para precisar la información de los comprobantes relacionados.
 type CFDIRelacionadosMgo struct {
@@ -41,12 +55,26 @@ type CFDIRelacionadoMgo struct {
 	UUID string // Atributo opcional para registrar el folio fiscal (UUID) de un CFDI relacionado con el presente comprobante, por ejemplo: Si el CFDI relacionado es un comprobante de traslado que sirve para registrar el movimiento de la mercancía. Si este comprobante se usa como nota de crédito o nota de débito del comprobante relacionado. Si este comprobante es una devolución sobre el comprobante relacionado. Si éste sustituye a una factura cancelada. Opc.
 }
 
+/*****************************************************************************************************************************************
+*
+*	Seccion referente al emisor del CFD
+*
+*
+****************************************************************************************************************************************/
+
 // CFDIEmisorMgo Nodo requerido para expresar la información del contribuyente emisor del comprobante.
 type CFDIEmisorMgo struct {
 	RFC           string // Atributo requerido para registrar la Clave del Registro Federal de Contribuyentes correspondiente al contribuyente emisor del comprobante. Pattern [a-zA-Z]{3-4}[0,9]{6}[a-zA-Z0-9]{3} Req.
 	Nombre        string // Atributo opcional para registrar el nombre, denominación o razón social del contribuyente emisor del comprobante. Pattern  ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,254} Opc.
 	RegimenFiscal string // Atributo requerido para incorporar la clave del régimen del contribuyente emisor al que aplicará el efecto fiscal de este comprobante.
 }
+
+/*****************************************************************************************************************************************
+*
+*	Seccion referente al receptor del CFD
+*
+*
+****************************************************************************************************************************************/
 
 // CFDIReceptorMgo Nodo requerido para precisar la información del contribuyente receptor del comprobante.
 type CFDIReceptorMgo struct {
@@ -56,6 +84,13 @@ type CFDIReceptorMgo struct {
 	NumRegIDTrib     string // Atributo condicional para expresar el número de registro de identidad fiscal del receptor cuando sea residente en el extranjero. Es requerido cuando se incluya el complemento de comercio exterior. Opc.
 	UsoCFDI          string // Atributo requerido para expresar la clave del uso que dará a esta factura el receptor del CFDI. c_UsoCFDI. Req.
 }
+
+/*****************************************************************************************************************************************
+*
+*	Seccion referente a la lista de conceptos del CFD
+*
+*
+****************************************************************************************************************************************/
 
 // CFDIConceptosMgo Nodo requerido para listar los conceptos cubiertos por el comprobante.
 type CFDIConceptosMgo struct {
@@ -73,27 +108,109 @@ type CFDIConceptoMgo struct {
 	ValorUnitario    float64 // Atributo requerido para precisar el valor o precio unitario del bien o servicio cubierto por el presente concepto. tdCFDI:t_Importe Req.
 	Importe          float64 //Atributo requerido para precisar el importe total de los bienes o servicios del presente concepto. Debe ser equivalente al resultado de multiplicar la cantidad por el valor unitario expresado en el concepto. No se permiten valores negativos. tdCFDI:t_Importe Req.
 	Descuento        float64 // Atributo opcional para representar el importe de los descuentos aplicables al concepto. No se permiten valores negativos. tdCFDI:t_Importe Opc.
+	CFDIImpuestosInnerMgo
+}
+
+// CFDIImpuestosInnerMgo Nodo opcional para capturar los impuestos aplicables al presente concepto. Cuando un concepto no registra un impuesto, implica que no es objeto del mismo.
+type CFDIImpuestosInnerMgo struct {
+	Traslados CFDIImpuestosTrasladosInnerMgo //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+	Traslado  CFDIImpuestosTrasladosInnerMgo //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+}
+
+// CFDIImpuestosTrasladosInnerMgo Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+type CFDIImpuestosTrasladosInnerMgo struct {
+	Traslados []CFDIImpuestosTrasladoInnerMgo
+}
+
+// CFDIImpuestosTrasladoInnerMgo Nodo requerido para asentar la información detallada de un traslado de impuestos aplicable al presente concepto.
+type CFDIImpuestosTrasladoInnerMgo struct {
+	Base       float64 // Atributo requerido para señalar la base para el cálculo del impuesto, la determinación de la base se realiza de acuerdo con las disposiciones fiscales vigentes. No se permiten valores negativos.
+	Impuesto   string  // Atributo requerido para señalar la clave del tipo de impuesto trasladado aplicable al concepto.
+	TipoFactor string  // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
+	TasaOCuota float64 // Atributo condicional para señalar el valor de la tasa o cuota del impuesto que se traslada para el presente concepto. Es requerido cuando el atributo TipoFactor tenga un valor que corresponda a Tasa o Cuota.
+	Importe    float64 // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
+}
+
+// CFDIImpuestosRetencionesInnerMgo Nodo opcional para asentar los impuestos retenidos aplicables al presente concepto.
+type CFDIImpuestosRetencionesInnerMgo struct {
+	Retenciones []CFDIImpuestosRetencionInnerMgo //
+}
+
+// CFDIImpuestosRetencionInnerMgo Nodo requerido para asentar la información detallada de una retención de impuestos aplicable al presente concepto.
+type CFDIImpuestosRetencionInnerMgo struct {
+	Base       float64 // Atributo requerido para señalar la base para el cálculo del impuesto, la determinación de la base se realiza de acuerdo con las disposiciones fiscales vigentes. No se permiten valores negativos.
+	Impuesto   string  // Atributo requerido para señalar la clave del tipo de impuesto trasladado aplicable al concepto.
+	TipoFactor string  // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
+	TasaOCuota float64 // Atributo condicional para señalar el valor de la tasa o cuota del impuesto que se traslada para el presente concepto. Es requerido cuando el atributo TipoFactor tenga un valor que corresponda a Tasa o Cuota.
+	Importe    float64 // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
+}
+
+// CFDIInformacionAduanera Nodo opcional para introducir la información aduanera aplicable cuando se trate de ventas de primera mano de mercancías importadas o se trate de operaciones de comercio exterior con bienes o servicios.
+type CFDIInformacionAduanera struct {
+	NumeroPedimento string // Atributo requerido para expresar el número del pedimento que ampara la importación del bien que se expresa en el siguiente formato: últimos 2 dígitos del año de validación seguidos por dos espacios, 2 dígitos de la aduana de despacho seguidos por dos espacios, 4 dígitos del número de la patente seguidos por dos espacios, 1 dígito que corresponde al último dígito del año en curso, salvo que se trate de un pedimento consolidado iniciado en el año inmediato anterior o del pedimento original de una rectificación, seguido de 6 dígitos de la numeración progresiva por aduana. Pattern [0-9]{2} [0-9]{2} [0-9]{4} [0-9]{7}
+}
+
+// CFDICuentaPredial Nodo opcional para asentar el número de cuenta predial con el que fue registrado el inmueble, en el sistema catastral de la entidad federativa de que trate, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable.
+type CFDICuentaPredial struct {
+	Numero string // Atributo requerido para precisar el número de la cuenta predial del inmueble cubierto por el presente concepto, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable, tratándose de arrendamiento Pattern [0-9]{1,150}
+}
+
+// ComplementoConcepto Nodo opcional donde se incluyen los nodos complementarios de extensión al concepto definidos por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
+type ComplementoConcepto struct {
+	Complemento interface{}
+}
+
+/*****************************************************************************************************************************************
+*
+* Seccion relacionada con el nodo Impuestos del CFD
+*
+*
+****************************************************************************************************************************************/
+
+// CFDIImpuestosMgo Nodo condicional para expresar el resumen de los impuestos aplicables.
+type CFDIImpuestosMgo struct {
+	TotalImpuestosRetenidos   float64 // Atributo condicional para expresar el total de los impuestos retenidos que se desprenden de los conceptos expresados en el comprobante fiscal digital por Internet. No se permiten valores negativos. Es requerido cuando en los conceptos se registren impuestos retenidos
+	TotalImpuestosTrasladados float64 // Atributo condicional para expresar el total de los impuestos trasladados que se desprenden de los conceptos expresados en el comprobante fiscal digital por Internet. No se permiten valores negativos. Es requerido cuando en los conceptos se registren impuestos trasladados.
+	CFDIRetencionesMGO
+	CFDITrasladosMGO
+}
+
+// CFDIRetencionesMGO Nodo condicional para capturar los impuestos retenidos aplicables. Es requerido cuando en los conceptos se registre algún impuesto retenido.
+type CFDIRetencionesMGO struct {
+	Retenciones []CFDIRetencionMGO
+}
+
+// CFDIRetencionMGO Nodo requerido para la información detallada de una retención de impuesto específico
+type CFDIRetencionMGO struct {
+	Impuesto string  // Atributo requerido para señalar la clave del tipo de impuesto retenido
+	Importe  float64 // Atributo requerido para señalar el monto del impuesto retenido. No se permiten valores negativos.
+}
+
+// CFDITrasladosMGO Nodo condicional para capturar los impuestos trasladados aplicables. Es requerido cuando en los conceptos se registre un impuesto trasladado.
+type CFDITrasladosMGO struct {
+	Traslados []CFDITrasladoMGO
+}
+
+// CFDITrasladoMGO Nodo requerido para la información detallada de un traslado de impuesto específico.
+type CFDITrasladoMGO struct {
+	Impuesto   string  // Atributo requerido para señalar la clave del tipo de impuesto trasladado.
+	TipoFactor string  // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
+	TasaOCuota float64 // Atributo requerido para señalar el valor de la tasa o cuota del impuesto que se traslada por los conceptos amparados en el comprobante.
+	Importe    float64 // Atributo requerido para señalar la suma del importe del impuesto trasladado, agrupado por impuesto, TipoFactor y TasaOCuota. No se permiten valores negativos.
 }
 
 /*
-// CFDIImpuestosInnerMgo Nodo opcional para capturar los impuestos aplicables al presente concepto. Cuando un concepto no registra un impuesto, implica que no es objeto del mismo.
-type CFDIImpuestosInnerMgo struct {
-	Traslado []CFDIImpuestosTrasladosInnerMgo //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
-	Traslado []CFDIImpuestosTrasladosInnerMgo //Nodo opcional para asentar los impuestos trasladados aplicables al presente concepto.
+ */
+
+// CFDIComplemento Nodo opcional donde se incluye el complemento Timbre Fiscal Digital de manera obligatoria y los nodos complementarios determinados por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
+type CFDIComplemento struct {
+	elemento interface{}
 }
 
-// CFDIImpuestosTrasladosInnerMgo Nodo requerido para asentar la información detallada de un traslado de impuestos aplicable al presente concepto.
-type CFDIImpuestosTrasladosInnerMgo struct {
-	ClaveProdServ string //
-}
+/*
+ */
 
-// CFDIImpuestosRetencionesInnerMgo Nodo opcional para capturar los impuestos aplicables al presente concepto. Cuando un concepto no registra un impuesto, implica que no es objeto del mismo.
-type CFDIImpuestosRetencionesInnerMgo struct {
-	ClaveProdServ string //
+// CFDIAddenda Nodo opcional para recibir las extensiones al presente formato que sean de utilidad al contribuyente. Para las reglas de uso del mismo, referirse al formato origen.
+type CFDIAddenda struct {
+	elemento interface{}
 }
-
-type CFDIComplementoMgo struct {
-}
-type CFDIAdendaMgo struct {
-}
-*/
