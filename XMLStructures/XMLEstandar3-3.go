@@ -160,20 +160,23 @@ type CFDIImpuestosRetencionInner struct {
 	Importe    float64  `xml:"Importe,attr"`    // Atributo condicional para señalar el importe del impuesto trasladado que aplica al concepto. No se permiten valores negativos. Es requerido cuando TipoFactor sea Tasa o Cuota
 }
 
-// // CFDIInformacionAduanera Nodo opcional para introducir la información aduanera aplicable cuando se trate de ventas de primera mano de mercancías importadas o se trate de operaciones de comercio exterior con bienes o servicios.
-// type CFDIInformacionAduanera struct {
-// 	NumeroPedimento string // Atributo requerido para expresar el número del pedimento que ampara la importación del bien que se expresa en el siguiente formato: últimos 2 dígitos del año de validación seguidos por dos espacios, 2 dígitos de la aduana de despacho seguidos por dos espacios, 4 dígitos del número de la patente seguidos por dos espacios, 1 dígito que corresponde al último dígito del año en curso, salvo que se trate de un pedimento consolidado iniciado en el año inmediato anterior o del pedimento original de una rectificación, seguido de 6 dígitos de la numeración progresiva por aduana. Pattern [0-9]{2} [0-9]{2} [0-9]{4} [0-9]{7}
-// }
+// CFDIInformacionAduanera Nodo opcional para introducir la información aduanera aplicable cuando se trate de ventas de primera mano de mercancías importadas o se trate de operaciones de comercio exterior con bienes o servicios.
+type CFDIInformacionAduanera struct {
+	XMLName         xml.Name `xml:"cfdi:InformacionAduanera"`
+	NumeroPedimento string   `xml:"NumeroPedimento,attr"` // Atributo requerido para expresar el número del pedimento que ampara la importación del bien que se expresa en el siguiente formato: últimos 2 dígitos del año de validación seguidos por dos espacios, 2 dígitos de la aduana de despacho seguidos por dos espacios, 4 dígitos del número de la patente seguidos por dos espacios, 1 dígito que corresponde al último dígito del año en curso, salvo que se trate de un pedimento consolidado iniciado en el año inmediato anterior o del pedimento original de una rectificación, seguido de 6 dígitos de la numeración progresiva por aduana. Pattern [0-9]{2} [0-9]{2} [0-9]{4} [0-9]{7}
+}
 
-// // CFDICuentaPredial Nodo opcional para asentar el número de cuenta predial con el que fue registrado el inmueble, en el sistema catastral de la entidad federativa de que trate, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable.
-// type CFDICuentaPredial struct {
-// 	Numero string // Atributo requerido para precisar el número de la cuenta predial del inmueble cubierto por el presente concepto, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable, tratándose de arrendamiento Pattern [0-9]{1,150}
-// }
+// CFDICuentaPredial Nodo opcional para asentar el número de cuenta predial con el que fue registrado el inmueble, en el sistema catastral de la entidad federativa de que trate, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable.
+type CFDICuentaPredial struct {
+	XMLName xml.Name `xml:"cfdi:CuentaPredial"`
+	Numero  string   `xml:"Numero,attr"` // Atributo requerido para precisar el número de la cuenta predial del inmueble cubierto por el presente concepto, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable, tratándose de arrendamiento Pattern [0-9]{1,150}
+}
 
-// // ComplementoConcepto Nodo opcional donde se incluyen los nodos complementarios de extensión al concepto definidos por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
-// type ComplementoConcepto struct {
-// 	Complemento interface{}
-// }
+// ComplementoConcepto Nodo opcional donde se incluyen los nodos complementarios de extensión al concepto definidos por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
+type ComplementoConcepto struct {
+	XMLName     xml.Name `xml:"cfdi:ComplementoConcepto"`
+	Complemento interface{}
+}
 
 // /*****************************************************************************************************************************************
 // *

@@ -146,17 +146,17 @@ type CFDIImpuestosRetencionInnerMgo struct {
 }
 
 // CFDIInformacionAduanera Nodo opcional para introducir la información aduanera aplicable cuando se trate de ventas de primera mano de mercancías importadas o se trate de operaciones de comercio exterior con bienes o servicios.
-type CFDIInformacionAduanera struct {
+type CFDIInformacionAduaneraMgo struct {
 	NumeroPedimento string // Atributo requerido para expresar el número del pedimento que ampara la importación del bien que se expresa en el siguiente formato: últimos 2 dígitos del año de validación seguidos por dos espacios, 2 dígitos de la aduana de despacho seguidos por dos espacios, 4 dígitos del número de la patente seguidos por dos espacios, 1 dígito que corresponde al último dígito del año en curso, salvo que se trate de un pedimento consolidado iniciado en el año inmediato anterior o del pedimento original de una rectificación, seguido de 6 dígitos de la numeración progresiva por aduana. Pattern [0-9]{2} [0-9]{2} [0-9]{4} [0-9]{7}
 }
 
 // CFDICuentaPredial Nodo opcional para asentar el número de cuenta predial con el que fue registrado el inmueble, en el sistema catastral de la entidad federativa de que trate, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable.
-type CFDICuentaPredial struct {
+type CFDICuentaPredialMgo struct {
 	Numero string // Atributo requerido para precisar el número de la cuenta predial del inmueble cubierto por el presente concepto, o bien para incorporar los datos de identificación del certificado de participación inmobiliaria no amortizable, tratándose de arrendamiento Pattern [0-9]{1,150}
 }
 
 // ComplementoConcepto Nodo opcional donde se incluyen los nodos complementarios de extensión al concepto definidos por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
-type ComplementoConcepto struct {
+type ComplementoConceptoMgo struct {
 	Complemento interface{}
 }
 
@@ -202,15 +202,15 @@ type CFDITrasladoMGO struct {
 /*
  */
 
-// CFDIComplemento Nodo opcional donde se incluye el complemento Timbre Fiscal Digital de manera obligatoria y los nodos complementarios determinados por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
-type CFDIComplemento struct {
+// CFDIComplementoMgo Nodo opcional donde se incluye el complemento Timbre Fiscal Digital de manera obligatoria y los nodos complementarios determinados por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
+type CFDIComplementoMgo struct {
 	elemento interface{}
 }
 
 /*
  */
 
-// CFDIAddenda Nodo opcional para recibir las extensiones al presente formato que sean de utilidad al contribuyente. Para las reglas de uso del mismo, referirse al formato origen.
-type CFDIAddenda struct {
+// CFDIAddendaMgo Nodo opcional para recibir las extensiones al presente formato que sean de utilidad al contribuyente. Para las reglas de uso del mismo, referirse al formato origen.
+type CFDIAddendaMgo struct {
 	elemento interface{}
 }
