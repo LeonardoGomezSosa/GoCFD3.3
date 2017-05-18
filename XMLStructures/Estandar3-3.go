@@ -10,7 +10,7 @@ import "time"
 *
 ****************************************************************************************************************************************/
 
-// Comprobante Estándar de Comprobante Fiscal Digital por Internet
+// ComprobanteMgo Comprobante Estándar de Comprobante Fiscal Digital por Internet
 type ComprobanteMgo struct {
 	Version           string    // Atributo requerido con valor prefijado a 3.3 que indica la versión del estándar bajo el que se encuentra expresado el comprobante. Default: "3.3" Req.
 	Serie             string    // Atributo opcional para precisar la serie para control interno del contribuyente. Este atributo acepta una cadena de caracteres. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü| Ü){1,25} Opc.
