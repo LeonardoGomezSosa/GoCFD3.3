@@ -34,10 +34,10 @@ type Comprobante struct {
 	MetodoPago        string           `xml:"MetodoPago,attr"`        // Atributo condicional para precisar la clave del método de pago que aplica para este comprobante fiscal digital por Internet, conforme al Artículo 29-A fracción VII incisos a y b del CFF.Opc.
 	LugarExpedicion   string           `xml:"LugarExpedicion,attr"`   // Atributo requerido para incorporar el código postal del lugar de expedición del comprobante (domicilio de la matriz o de la sucursal). Req.
 	Confirmacion      string           `xml:"Confirmacion,attr"`      // Atributo condicional para registrar la clave de confirmación que entregue el PAC para expedir el comprobante con importes grandes, con un tipo de cambio fuera del rango establecido o con ambos casos. Es requerido cuando se registra un tipo de cambio o un total fuera del rango establecido. Pattern [0-9a-zA-Z]{5}. Opc.
-	Relacionados      CFDIRelacionados `xml:"cfdi:Relacionados"`
-	// CFDIEmisor
-	// CFDIReceptor
-	// CFDIConceptos
+	Relacionados      CFDIRelacionados `xml:"cfdi:CfdiRelacionados"`
+	Emisor            CFDIEmisor       `xml:"cfdi:Emisor"`
+	Receptor          CFDIReceptor     `xml:"cfdi:Receptor"`
+	Conceptos         CFDIConceptos    `xml:"cfdi:Conceptos"`
 	// CFDIImpuestos
 }
 
@@ -50,72 +50,76 @@ type Comprobante struct {
 
 // CFDIRelacionados Nodo opcional para precisar la información de los comprobantes relacionados.
 type CFDIRelacionados struct {
-	XMLName         xml.Name        `xml:"cfdi:Relacionados"`
-	TipoRelacion    string          `xml:"tipoRelacion,attr"` // Atributo requerido para indicar la clave de la relación que existe entre éste que se esta generando y el o los CFDI previos. catCFDI:c_TipoRelacion Req.
-	CfdiRelacionado CFDIRelacionado `xml:"cfdi:Relacionado"`  // Nodo requerido para precisar la información de los comprobantes relacionados.
+	XMLName         xml.Name        `xml:"cfdi:CfdiRelacionados"`
+	TipoRelacion    string          `xml:"tipoRelacion,attr"`    // Atributo requerido para indicar la clave de la relación que existe entre éste que se esta generando y el o los CFDI previos. catCFDI:c_TipoRelacion Req.
+	CfdiRelacionado CFDIRelacionado `xml:"cfdi:CfdiRelacionado"` // Nodo requerido para precisar la información de los comprobantes relacionados.
 }
 
 // CFDIRelacionado Nodo opcional para precisar la información de los comprobantes relacionados.
 type CFDIRelacionado struct {
-	XMLName xml.Name `xml:"cfdi:Relacionado"`
+	XMLName xml.Name `xml:"cfdi:CfdiRelacionado"`
 	UUID    string   `xml:"UUID,attr"` // Atributo opcional para registrar el folio fiscal (UUID) de un CFDI relacionado con el presente comprobante, por ejemplo: Si el CFDI relacionado es un comprobante de traslado que sirve para registrar el movimiento de la mercancía. Si este comprobante se usa como nota de crédito o nota de débito del comprobante relacionado. Si este comprobante es una devolución sobre el comprobante relacionado. Si éste sustituye a una factura cancelada. Opc.
 }
 
-// /*****************************************************************************************************************************************
-// *
-// *	Seccion referente al emisor del CFD
-// *
-// *
-// ****************************************************************************************************************************************/
+/*****************************************************************************************************************************************
+*
+*	Seccion referente al emisor del CFD
+*
+*
+****************************************************************************************************************************************/
 
-// // CFDIEmisor Nodo requerido para expresar la información del contribuyente emisor del comprobante.
-// type CFDIEmisor struct {
-// 	RFC           string // Atributo requerido para registrar la Clave del Registro Federal de Contribuyentes correspondiente al contribuyente emisor del comprobante. Pattern [a-zA-Z]{3-4}[0,9]{6}[a-zA-Z0-9]{3} Req.
-// 	Nombre        string // Atributo opcional para registrar el nombre, denominación o razón social del contribuyente emisor del comprobante. Pattern  ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,254} Opc.
-// 	RegimenFiscal string // Atributo requerido para incorporar la clave del régimen del contribuyente emisor al que aplicará el efecto fiscal de este comprobante.
-// }
+// CFDIEmisor Nodo requerido para expresar la información del contribuyente emisor del comprobante.
+type CFDIEmisor struct {
+	XMLName       xml.Name `xml:"cfdi:Emisor"`
+	RFC           string   `xml:"Rfc,attr"`           // Atributo requerido para registrar la Clave del Registro Federal de Contribuyentes correspondiente al contribuyente emisor del comprobante. Pattern [a-zA-Z]{3-4}[0,9]{6}[a-zA-Z0-9]{3} Req.
+	Nombre        string   `xml:"Nombre,attr"`        // Atributo opcional para registrar el nombre, denominación o razón social del contribuyente emisor del comprobante. Pattern  ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,254} Opc.
+	RegimenFiscal string   `xml:"RegimenFiscal,attr"` // Atributo requerido para incorporar la clave del régimen del contribuyente emisor al que aplicará el efecto fiscal de este comprobante.
+}
 
-// /*****************************************************************************************************************************************
-// *
-// *	Seccion referente al receptor del CFD
-// *
-// *
-// ****************************************************************************************************************************************/
+/*****************************************************************************************************************************************
+*
+*	Seccion referente al receptor del CFD
+*
+*
+****************************************************************************************************************************************/
 
-// // CFDIReceptor Nodo requerido para precisar la información del contribuyente receptor del comprobante.
-// type CFDIReceptor struct {
-// 	RFC              string // Atributo requerido para precisar la Clave del Registro Federal de Contribuyentes correspondiente al contribuyente receptor del comprobante. Req.
-// 	Nombre           string // Atributo opcional para precisar el nombre, denominación o razón social del contribuyente receptor del comprobante. Opc.
-// 	ResidenciaFiscal string // Atributo condicional para registrar la clave del país de residencia para efectos fiscales del receptor del comprobante, cuando se trate de un extranjero, y que es conforme con la especificación ISO 3166-1 alpha-3. Es requerido cuando se incluya el complemento de comercio exterior o se registre el atributo NumRegIdTrib. c_Pais. Opc.
-// 	NumRegIDTrib     string // Atributo condicional para expresar el número de registro de identidad fiscal del receptor cuando sea residente en el extranjero. Es requerido cuando se incluya el complemento de comercio exterior. Opc.
-// 	UsoCFDI          string // Atributo requerido para expresar la clave del uso que dará a esta factura el receptor del CFDI. c_UsoCFDI. Req.
-// }
+// CFDIReceptor Nodo requerido para precisar la información del contribuyente receptor del comprobante.
+type CFDIReceptor struct {
+	XMLName          xml.Name `xml:"cfdi:Receptor"`
+	RFC              string   `xml:"Rfc,attr"`              // Atributo requerido para precisar la Clave del Registro Federal de Contribuyentes correspondiente al contribuyente receptor del comprobante. Req.
+	Nombre           string   `xml:"Nombre,attr"`           // Atributo opcional para precisar el nombre, denominación o razón social del contribuyente receptor del comprobante. Opc.
+	ResidenciaFiscal string   `xml:"ResidenciaFiscal,attr"` // Atributo condicional para registrar la clave del país de residencia para efectos fiscales del receptor del comprobante, cuando se trate de un extranjero, y que es conforme con la especificación ISO 3166-1 alpha-3. Es requerido cuando se incluya el complemento de comercio exterior o se registre el atributo NumRegIdTrib. c_Pais. Opc.
+	NumRegIDTrib     string   `xml:"NumRegIdTrib,attr"`     // Atributo condicional para expresar el número de registro de identidad fiscal del receptor cuando sea residente en el extranjero. Es requerido cuando se incluya el complemento de comercio exterior. Opc.
+	UsoCFDI          string   `xml:"UsoCFDI,attr"`          // Atributo requerido para expresar la clave del uso que dará a esta factura el receptor del CFDI. c_UsoCFDI. Req.
+}
 
-// /*****************************************************************************************************************************************
-// *
-// *	Seccion referente a la lista de conceptos del CFD
-// *
-// *
-// ****************************************************************************************************************************************/
+/*****************************************************************************************************************************************
+*
+*	Seccion referente a la lista de conceptos del CFD
+*
+*
+****************************************************************************************************************************************/
 
-// // CFDIConceptos Nodo requerido para listar los conceptos cubiertos por el comprobante.
-// type CFDIConceptos struct {
-// 	Conceptos []CFDIConcepto // Lista de conceptos
-// }
+// CFDIConceptos Nodo requerido para listar los conceptos cubiertos por el comprobante.
+type CFDIConceptos struct {
+	XMLName   xml.Name     `xml:"cfdi:Conceptos"`
+	Conceptos CFDIConcepto // Lista de conceptos
+}
 
-// // CFDIConcepto Nodo requerido para registrar la información detallada de un bien o servicio amparado en el comprobante.
-// type CFDIConcepto struct {
-// 	ClaveProdServ    string  // Atributo requerido para expresar la clave del producto o del servicio amparado por el presente concepto. Es requerido y deben utilizar las claves del catálogo de productos y servicios, cuando los conceptos que registren por sus actividades correspondan con dichos conceptos. c_ClaveProdServ Req.
-// 	NoIdentificacion string  // Atributo opcional para expresar el número de parte, identificador del producto o del servicio, la clave de producto o servicio, SKU o equivalente, propia de la operación del emisor, amparado por el presente concepto. Opcionalmente se puede utilizar claves del estándar GTIN. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}. Opc.
-// 	Cantidad         float64 // Atributo requerido para precisar la cantidad de bienes o servicios del tipo particular definido por el presente concepto. decimales (6) Req.
-// 	ClaveUnidad      string  // Atributo requerido para precisar la clave de unidad de medida estandarizada aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. catCFDI:c_ClaveUnidad Req.
-// 	Unidad           string  // Atributo opcional para precisar la unidad de medida propia de la operación del emisor, aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}.Opc.
-// 	Descripcion      string  // Atributo requerido para precisar la descripción del bien o servicio cubierto por el presente concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000} Opc.
-// 	ValorUnitario    float64 // Atributo requerido para precisar el valor o precio unitario del bien o servicio cubierto por el presente concepto. tdCFDI:t_Importe Req.
-// 	Importe          float64 //Atributo requerido para precisar el importe total de los bienes o servicios del presente concepto. Debe ser equivalente al resultado de multiplicar la cantidad por el valor unitario expresado en el concepto. No se permiten valores negativos. tdCFDI:t_Importe Req.
-// 	Descuento        float64 // Atributo opcional para representar el importe de los descuentos aplicables al concepto. No se permiten valores negativos. tdCFDI:t_Importe Opc.
-// 	CFDIImpuestosInner
-// }
+// CFDIConcepto Nodo requerido para registrar la información detallada de un bien o servicio amparado en el comprobante.
+type CFDIConcepto struct {
+	XMLName          xml.Name `xml:"cfdi:Concepto"`
+	ClaveProdServ    string   `xml:"ClaveProdServ,attr"`    // Atributo requerido para expresar la clave del producto o del servicio amparado por el presente concepto. Es requerido y deben utilizar las claves del catálogo de productos y servicios, cuando los conceptos que registren por sus actividades correspondan con dichos conceptos. c_ClaveProdServ Req.
+	NoIdentificacion string   `xml:"NoIdentificacion,attr"` // Atributo opcional para expresar el número de parte, identificador del producto o del servicio, la clave de producto o servicio, SKU o equivalente, propia de la operación del emisor, amparado por el presente concepto. Opcionalmente se puede utilizar claves del estándar GTIN. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}. Opc.
+	Cantidad         float64  `xml:"Cantidad,attr"`         // Atributo requerido para precisar la cantidad de bienes o servicios del tipo particular definido por el presente concepto. decimales (6) Req.
+	ClaveUnidad      string   `xml:"ClaveUnidad,attr"`      // Atributo requerido para precisar la clave de unidad de medida estandarizada aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. catCFDI:c_ClaveUnidad Req.
+	Unidad           string   `xml:"Unidad,attr"`           // Atributo opcional para precisar la unidad de medida propia de la operación del emisor, aplicable para la cantidad expresada en el concepto. La unidad debe corresponder con la descripción del concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}.Opc.
+	Descripcion      string   `xml:"Descripcion,attr"`      // Atributo requerido para precisar la descripción del bien o servicio cubierto por el presente concepto. Pattern ([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;| ́|- |:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000} Opc.
+	ValorUnitario    float64  `xml:"ValorUnitario,attr"`    // Atributo requerido para precisar el valor o precio unitario del bien o servicio cubierto por el presente concepto. tdCFDI:t_Importe Req.
+	Importe          float64  `xml:"Importe,attr"`          //Atributo requerido para precisar el importe total de los bienes o servicios del presente concepto. Debe ser equivalente al resultado de multiplicar la cantidad por el valor unitario expresado en el concepto. No se permiten valores negativos. tdCFDI:t_Importe Req.
+	Descuento        float64  `xml:"Descuento,attr"`        // Atributo opcional para representar el importe de los descuentos aplicables al concepto. No se permiten valores negativos. tdCFDI:t_Importe Opc.
+	// Impuestos CFDIImpuestosInner
+}
 
 // // CFDIImpuestosInner Nodo opcional para capturar los impuestos aplicables al presente concepto. Cuando un concepto no registra un impuesto, implica que no es objeto del mismo.
 // type CFDIImpuestosInner struct {
