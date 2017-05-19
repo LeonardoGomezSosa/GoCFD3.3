@@ -39,6 +39,7 @@ type Comprobante struct {
 	Receptor          CFDIReceptor     `xml:"cfdi:Receptor"`
 	Conceptos         CFDIConceptos    `xml:"cfdi:Conceptos"`
 	Impuestos         CFDIImpuestos    `xml:"cfdi:Impuestos"`
+	Complemento       CFDIComplemento  `xml:"cfdi:Complemento"`
 }
 
 /*****************************************************************************************************************************************
@@ -225,10 +226,11 @@ type CFDITraslado struct {
 // /*
 //  */
 
-// // CFDIComplemento Nodo opcional donde se incluye el complemento Timbre Fiscal Digital de manera obligatoria y los nodos complementarios determinados por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
-// type CFDIComplemento struct {
-// 	elemento interface{}
-// }
+// CFDIComplemento Nodo opcional donde se incluye el complemento Timbre Fiscal Digital de manera obligatoria y los nodos complementarios determinados por el SAT, de acuerdo con las disposiciones particulares para un sector o actividad específica.
+type CFDIComplemento struct {
+	XMLName xml.Name   `xml:"cfdi:Complemento"`
+	Timbre  CFDITimbre `xml:"tfd:TimbreFiscalDigital"`
+}
 
 // /*
 //  */
@@ -237,6 +239,19 @@ type CFDITraslado struct {
 // type CFDIAddenda struct {
 // 	elemento interface{}
 // }
+
+// CFDITimbre Estructura XML del timbre Fiscal Digital
+type CFDITimbre struct {
+	XMLName          xml.Name `xml:"tfd:TimbreFiscalDigital"`
+	Tfd              string   `xml:"xmlns:tfd,attr"`
+	SchemaLocation   string   `xml:"xsi:schemaLocation,attr"`
+	SelloSAT         string   `xml:"selloSAT,attr"`
+	NoCertificadoSAT string   `xml:"noCertificadoSAT,attr"`
+	SelloCFD         string   `xml:"selloCFD,attr"`
+	FechaTimbrado    string   `xml:"FechaTimbrado,attr"`
+	UUID             string   `xml:"UUID,attr"`
+	Version          string   `xml:"version,attr"`
+}
 
 //MarshallData2XML Transformar Estructura a XML
 func MarshallData2XML(comprobante Comprobante) string {

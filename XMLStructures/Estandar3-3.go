@@ -214,3 +214,15 @@ type CFDIComplementoMgo struct {
 type CFDIAddendaMgo struct {
 	elemento interface{}
 }
+
+// CFDITimbreMGO esquema del timbre del cfd
+type CFDITimbreMGO struct {
+	Tfd              string `xml:"tfd,attr"`
+	SchemaLocation   string `xml:"schemaLocation,attr"`
+	SelloSAT         string `xml:"selloSAT,attr"`
+	NoCertificadoSAT string `xml:"noCertificadoSAT,attr"`
+	SelloCFD         string `xml:"selloCFD,attr"`
+	FechaTimbrado    string `xml:"FechaTimbrado,attr"`
+	UUID             string `xml:"UUID,attr"`
+	Version          string `xml:"version,attr"`
+}
