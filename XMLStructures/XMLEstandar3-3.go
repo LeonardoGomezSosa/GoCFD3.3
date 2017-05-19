@@ -38,7 +38,7 @@ type Comprobante struct {
 	Emisor            CFDIEmisor       `xml:"cfdi:Emisor"`
 	Receptor          CFDIReceptor     `xml:"cfdi:Receptor"`
 	Conceptos         CFDIConceptos    `xml:"cfdi:Conceptos"`
-	// CFDIImpuestos
+	Impuestos         CFDIImpuestos    `xml:"cfdi:Impuestos"`
 }
 
 /*****************************************************************************************************************************************
@@ -185,37 +185,42 @@ type ComplementoConcepto struct {
 // *
 // ****************************************************************************************************************************************/
 
-// // CFDIImpuestos Nodo condicional para expresar el resumen de los impuestos aplicables.
-// type CFDIImpuestos struct {
-// 	TotalImpuestosRetenidos   float64 // Atributo condicional para expresar el total de los impuestos retenidos que se desprenden de los conceptos expresados en el comprobante fiscal digital por Internet. No se permiten valores negativos. Es requerido cuando en los conceptos se registren impuestos retenidos
-// 	TotalImpuestosTrasladados float64 // Atributo condicional para expresar el total de los impuestos trasladados que se desprenden de los conceptos expresados en el comprobante fiscal digital por Internet. No se permiten valores negativos. Es requerido cuando en los conceptos se registren impuestos trasladados.
-// 	CFDIRetenciones
-// 	CFDITraslados
-// }
+// CFDIImpuestos Nodo condicional para expresar el resumen de los impuestos aplicables.
+type CFDIImpuestos struct {
+	XMLName                   xml.Name `xml:"cfdi:Impuestos"`
+	TotalImpuestosRetenidos   float64  `xml:"TotalImpuestosRetenidos,attr"`   // Atributo condicional para expresar el total de los impuestos retenidos que se desprenden de los conceptos expresados en el comprobante fiscal digital por Internet. No se permiten valores negativos. Es requerido cuando en los conceptos se registren impuestos retenidos
+	TotalImpuestosTrasladados float64  `xml:"TotalImpuestosTrasladados,attr"` // Atributo condicional para expresar el total de los impuestos trasladados que se desprenden de los conceptos expresados en el comprobante fiscal digital por Internet. No se permiten valores negativos. Es requerido cuando en los conceptos se registren impuestos trasladados.
+	Retenciones               CFDIRetenciones
+	Traslados                 CFDITraslados
+}
 
-// // CFDIRetenciones Nodo condicional para capturar los impuestos retenidos aplicables. Es requerido cuando en los conceptos se registre algún impuesto retenido.
-// type CFDIRetenciones struct {
-// 	Retenciones []CFDIRetencion
-// }
+// CFDIRetenciones Nodo condicional para capturar los impuestos retenidos aplicables. Es requerido cuando en los conceptos se registre algún impuesto retenido.
+type CFDIRetenciones struct {
+	XMLName     xml.Name      `xml:"cfdi:Retenciones"`
+	Retenciones CFDIRetencion `xml:"cfdi:Retencion"`
+}
 
-// // CFDIRetencion Nodo requerido para la información detallada de una retención de impuesto específico
-// type CFDIRetencion struct {
-// 	Impuesto string  // Atributo requerido para señalar la clave del tipo de impuesto retenido
-// 	Importe  float64 // Atributo requerido para señalar el monto del impuesto retenido. No se permiten valores negativos.
-// }
+// CFDIRetencion Nodo requerido para la información detallada de una retención de impuesto específico
+type CFDIRetencion struct {
+	XMLName  xml.Name `xml:"cfdi:Retencion"`
+	Impuesto string   `xml:"Impuesto,attr"` // Atributo requerido para señalar la clave del tipo de impuesto retenido
+	Importe  float64  `xml:"Importe,attr"`  // Atributo requerido para señalar el monto del impuesto retenido. No se permiten valores negativos.
+}
 
-// // CFDITraslados Nodo condicional para capturar los impuestos trasladados aplicables. Es requerido cuando en los conceptos se registre un impuesto trasladado.
-// type CFDITraslados struct {
-// 	Traslados []CFDITraslado
-// }
+// CFDITraslados Nodo condicional para capturar los impuestos trasladados aplicables. Es requerido cuando en los conceptos se registre un impuesto trasladado.
+type CFDITraslados struct {
+	XMLName   xml.Name     `xml:"cfdi:Traslados"`
+	Traslados CFDITraslado `xml:"cfdi:Traslado"`
+}
 
-// // CFDITraslado Nodo requerido para la información detallada de un traslado de impuesto específico.
-// type CFDITraslado struct {
-// 	Impuesto   string  // Atributo requerido para señalar la clave del tipo de impuesto trasladado.
-// 	TipoFactor string  // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
-// 	TasaOCuota float64 // Atributo requerido para señalar el valor de la tasa o cuota del impuesto que se traslada por los conceptos amparados en el comprobante.
-// 	Importe    float64 // Atributo requerido para señalar la suma del importe del impuesto trasladado, agrupado por impuesto, TipoFactor y TasaOCuota. No se permiten valores negativos.
-// }
+// CFDITraslado Nodo requerido para la información detallada de un traslado de impuesto específico.
+type CFDITraslado struct {
+	XMLName    xml.Name `xml:"cfdi:Traslado"`
+	Impuesto   string   `xml:"cfdi:Impuesto,attr"`   // Atributo requerido para señalar la clave del tipo de impuesto trasladado.
+	TipoFactor string   `xml:"cfdi:TipoFactor,attr"` // Atributo requerido para señalar la clave del tipo de factor que se aplica a la base del impuesto.
+	TasaOCuota float64  `xml:"cfdi:TasaOCuota,attr"` // Atributo requerido para señalar el valor de la tasa o cuota del impuesto que se traslada por los conceptos amparados en el comprobante.
+	Importe    float64  `xml:"cfdi:Importe,attr"`    // Atributo requerido para señalar la suma del importe del impuesto trasladado, agrupado por impuesto, TipoFactor y TasaOCuota. No se permiten valores negativos.
+}
 
 // /*
 //  */
@@ -234,12 +239,12 @@ type ComplementoConcepto struct {
 // }
 
 //MarshallData2XML Transformar Estructura a XML
-func MarshallData2XML(comprobante Comprobante) {
+func MarshallData2XML(comprobante Comprobante) string {
 
 	output, err := xml.MarshalIndent(comprobante, "  ", "    ")
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 	}
-	fmt.Println(string(output))
+	return string(output)
 
 }
